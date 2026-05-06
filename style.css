@@ -1,0 +1,595 @@
+/* ============================================================
+   LIONS TRANSPORTES — style.css  (versão premium dark)
+   Tema: escuro, dourado, profissional
+   Fontes: Playfair Display (títulos) + Inter (corpo)
+   ============================================================ */
+
+/* ---- VARIÁVEIS GLOBAIS ----------------------------------------
+   Mude aqui para ajustar cores em todo o site de uma vez.
+   --------------------------------------------------------------- */
+:root {
+  /* Cores de fundo */
+  --bg:          #0c0c0e;      /* fundo da página */
+  --surface:     #141416;      /* cards */
+  --surface-2:   #1a1a1e;      /* campos de input */
+
+  /* Bordas */
+  --border:      #2a2a30;      /* borda padrão */
+  --border-2:    #363640;      /* borda hover */
+
+  /* Dourado (cor de destaque) */
+  --gold:        #c9a96e;
+  --gold-bright: #e8c98a;
+  --gold-dim:    #7a6340;
+
+  /* Texto */
+  --text:        #f0ede8;      /* principal */
+  --text-2:      #9a9490;      /* secundário */
+  --text-3:      #5a5650;      /* dicas / labels */
+
+  /* Resultado (verde) */
+  --green:       #4ade80;
+  --green-bg:    #0f2a1a;
+  --green-border:#1e4a2a;
+
+  /* Erro (vermelho) */
+  --red:         #f87171;
+  --red-bg:      #2a0f0f;
+
+  /* Geometria */
+  --radius:      14px;
+  --radius-sm:   9px;
+
+  /* Tipografia */
+  --font-serif:  'Playfair Display', Georgia, serif;
+  --font-sans:   'Inter', system-ui, sans-serif;
+}
+
+/* ---- RESET ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html { scroll-behavior: smooth; }
+
+/* ---- BASE ---- */
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Textura sutil de ruído — dá profundidade sem gradiente */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---- ANIMAÇÕES BASE ---- */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes resultReveal {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+@keyframes glow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(201,169,110,.25); }
+  50%      { box-shadow: 0 0 0 10px rgba(201,169,110,0); }
+}
+
+/* ---- HEADER ---- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(12,12,14,.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  animation: fadeIn .5s ease;
+}
+
+.header-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 28px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Badge circular com animação de pulso dourado */
+.lion-badge {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--gold-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  animation: glow 3s ease-in-out infinite;
+  transition: transform .2s;
+}
+.lion-badge:hover { transform: scale(1.05); }
+
+.logo-name {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  color: var(--text);
+  letter-spacing: .01em;
+}
+
+.logo-tag {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-top: 1px;
+}
+
+/* ---- HERO ---- */
+.hero {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: 76px 24px 64px;
+  overflow: hidden;
+}
+
+/* Brilho radial suave atrás do título */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 65% 55% at 50% 105%, rgba(201,169,110,.07), transparent);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+  /* delay 0.1s — primeiro elemento a aparecer */
+  opacity: 0;
+  animation: slideUp .65s .1s ease forwards;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 5.5vw, 58px);
+  color: var(--text);
+  line-height: 1.12;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: slideUp .65s .25s ease forwards;
+}
+
+/* A palavra em itálico fica dourada */
+.hero-title em {
+  color: var(--gold);
+  font-style: normal;
+}
+
+.hero-sub {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-2);
+  line-height: 1.8;
+  opacity: 0;
+  animation: slideUp .65s .4s ease forwards;
+}
+
+/* ---- LINHA DOURADA DECORATIVA ---- */
+.gold-line-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: slideUp .65s .45s ease forwards;
+  position: relative;
+  z-index: 5;
+}
+
+.gold-line {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: .5;
+}
+
+/* ---- MAIN LAYOUT ---- */
+.main {
+  position: relative;
+  z-index: 5;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---- CARD PRINCIPAL ---- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* Aparece depois do hero */
+  opacity: 0;
+  animation: slideUp .65s .55s ease forwards;
+  transition: border-color .3s;
+}
+.card:hover { border-color: var(--border-2); }
+
+/* ---- CAMPOS ---- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.field:last-of-type { margin-bottom: 0; }
+
+.field-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* Campo de origem (somente leitura) */
+.field-fixed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+.pin-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  opacity: .6;
+}
+
+/* ---- SELECT (dropdown) ---- */
+.select-wrap { position: relative; }
+
+.select {
+  width: 100%;
+  padding: 14px 44px 14px 16px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition: border-color .25s, box-shadow .25s;
+}
+.select:hover  { border-color: var(--border-2); }
+.select:focus  {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 0 3px rgba(201,169,110,.1);
+}
+.select option { background: var(--surface-2); }
+
+/* Seta customizada do select */
+.select-chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  opacity: .45;
+}
+
+/* ---- COUNTER (passageiros) ---- */
+.counter-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.counter {
+  display: flex;
+  align-items: stretch;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color .25s;
+}
+.counter:focus-within { border-color: var(--border-2); }
+
+.cbtn {
+  width: 46px;
+  height: 46px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 20px;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, color .15s;
+  line-height: 1;
+}
+.cbtn:hover  { background: var(--border);   color: var(--text); }
+.cbtn:active { background: var(--border-2); }
+
+.cval {
+  width: 64px;
+  height: 46px;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-left:  1px solid var(--border);
+  border-right: 1px solid var(--border);
+  outline: none;
+  -moz-appearance: textfield;
+}
+.cval::-webkit-inner-spin-button,
+.cval::-webkit-outer-spin-button { display: none; }
+
+.counter-hint {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+/* ---- SEPARADOR ---- */
+.separator {
+  height: 1px;
+  background: var(--border);
+  margin: 24px 0 20px;
+}
+
+/* ---- BOTÃO CALCULAR ---- */
+.btn-calcular {
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--gold);
+  color: #1a1208;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: background .2s, transform .12s, box-shadow .2s;
+}
+
+/* Brilho interno ao hover */
+.btn-calcular::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.18), transparent);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.btn-calcular:hover { background: var(--gold-bright); box-shadow: 0 8px 28px rgba(201,169,110,.22); }
+.btn-calcular:hover::before { opacity: 1; }
+.btn-calcular:active { transform: scale(.99); }
+
+/* Seta se move para a direita no hover */
+.btn-arrow { transition: transform .2s; }
+.btn-calcular:hover .btn-arrow { transform: translateX(5px); }
+
+/* ---- RESULTADO (caixa verde) ---- */
+.resultado {
+  display: none;             /* visível só após calcular */
+  flex-direction: column;
+  gap: 12px;
+  background: var(--green-bg);
+  border: 1px solid var(--green-border);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  margin-top: 20px;
+  animation: resultReveal .4s ease;
+}
+
+.res-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.res-label  { font-size: 13px; color: #6aad85; }
+.res-val    { font-size: 13px; font-weight: 500; color: #9de5b4; }
+
+.res-divider {
+  height: 1px;
+  background: var(--green-border);
+}
+
+.res-total-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--green);
+}
+
+.res-total-val {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  color: var(--green);
+}
+
+.res-obs {
+  font-size: 11px;
+  color: #4a8a5a;
+  margin-top: 2px;
+}
+
+/* ---- ERRO ---- */
+.erro {
+  display: none;
+  background: var(--red-bg);
+  border: 1px solid rgba(248,113,113,.2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--red);
+  margin-top: 16px;
+  animation: resultReveal .3s ease;
+}
+
+/* ---- TABELA DE PREÇOS (expansível) ---- */
+.tabela-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  opacity: 0;
+  animation: slideUp .65s .68s ease forwards;
+  transition: border-color .3s;
+}
+.tabela-wrap:hover { border-color: var(--border-2); }
+
+.tabela-toggle-btn {
+  width: 100%;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .02em;
+  color: var(--text-2);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color .2s, background .2s;
+}
+.tabela-toggle-btn:hover { color: var(--text); background: rgba(255,255,255,.02); }
+
+.tab-arrow {
+  font-size: 15px;
+  color: var(--text-3);
+  transition: transform .25s ease;
+}
+
+.tabela-inner {
+  display: none;
+  border-top: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.tabela thead th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  background: rgba(255,255,255,.02);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.tabela tbody td {
+  padding: 10px 16px;
+  color: var(--text-2);
+  border-bottom: 1px solid rgba(42,42,48,.5);
+  white-space: nowrap;
+}
+.tabela tbody tr:last-child td { border-bottom: none; }
+.tabela tbody tr:hover { background: rgba(255,255,255,.015); }
+
+/* Coluna de preço em dourado */
+.tabela .price-cell {
+  color: var(--gold);
+  font-weight: 500;
+}
+
+/* ---- FOOTER ---- */
+.footer {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: 32px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.footer p {
+  font-size: 12px;
+  color: var(--text-3);
+  letter-spacing: .03em;
+  line-height: 2;
+}
+
+.footer-formula {
+  font-style: italic;
+  color: var(--gold-dim);
+}
+
+/* ---- RESPONSIVO (mobile) ---- */
+@media (max-width: 480px) {
+  .card { padding: 24px 20px; }
+  .hero { padding: 52px 20px 44px; }
+  .header-inner { padding: 0 20px; }
+  .counter-row { flex-direction: column; align-items: flex-start; }
+  .res-total-val { font-size: 30px; }
+}

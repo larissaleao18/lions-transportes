@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lions Transportes — Cotação de Frete</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Playfair Display = elegante para títulos | Inter = moderno para corpo -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-inner">
+      <!-- Badge do leão com animação de pulso -->
+      <div class="lion-badge" aria-hidden="true">🦁</div>
+      <div>
+        <span class="logo-name">Lions Transportes</span>
+        <span class="logo-tag">Extrema, MG</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <!-- Cada elemento tem delay crescente para o efeito cascata -->
+    <p class="hero-eyebrow">Calculadora de Frete</p>
+    <h1 class="hero-title">
+      Quanto vai custar<br>
+      a sua <em>viagem?</em>
+    </h1>
+    <p class="hero-sub">
+      Informe o destino e o número de passageiros<br>
+      e receba o valor estimado instantaneamente.
+    </p>
+  </section>
+
+  <!-- Linha dourada decorativa -->
+  <div class="gold-line-wrap">
+    <div class="gold-line"></div>
+  </div>
+
+  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+  <main class="main">
+
+    <!-- ===== CARD DO FORMULÁRIO ===== -->
+    <div class="card" id="card-form">
+
+      <!-- Origem (fixo, somente exibição) -->
+      <div class="field">
+        <span class="field-label">Origem</span>
+        <div class="field-fixed">
+          <!-- Ícone de pin SVG inline para não depender de biblioteca -->
+          <svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          Extrema, MG
+        </div>
+      </div>
+
+      <!-- Destino (dropdown) -->
+      <div class="field">
+        <label class="field-label" for="destino">Destino</label>
+        <div class="select-wrap">
+          <select id="destino" class="select">
+            <option value="">— Selecione o destino —</option>
+            <!-- data-base = preço base em R$ (usado pelo JavaScript) -->
+            <option value="Extrema" data-base="60">Extrema</option>
+            <option value="Extrema Rural" data-base="75">Extrema Rural (Godoy, Pessegueiro, Juncal, Salto)</option>
+            <option value="Vargem" data-base="80">Vargem</option>
+            <option value="Itapeva" data-base="80">Itapeva</option>
+            <option value="Itapeva Rural" data-base="110">Itapeva (Areias e Sertão)</option>
+            <option value="Toledo" data-base="110">Toledo</option>
+            <option value="Joanópolis" data-base="130">Joanópolis</option>
+            <option value="Munhoz" data-base="150">Munhoz</option>
+            <option value="Bragança" data-base="150">Bragança</option>
+            <option value="Piracaia" data-base="160">Piracaia</option>
+            <option value="Pinhalzinho" data-base="170">Pinhalzinho</option>
+            <option value="Atibaia" data-base="180">Atibaia</option>
+            <option value="Camanducaia" data-base="130">Camanducaia</option>
+            <option value="Cambuí" data-base="150">Cambuí</option>
+            <option value="Cambuí Córrego" data-base="170">Cambuí Córrego</option>
+            <option value="Aeroporto Campinas" data-base="550">Aeroporto Campinas</option>
+            <option value="Aeroporto Guarulhos" data-base="460">Aeroporto Guarulhos</option>
+            <option value="Aeroporto Congonhas" data-base="560">Aeroporto Congonhas</option>
+          </select>
+          <!-- Seta customizada (o CSS esconde a seta nativa do select) -->
+          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Número de passageiros -->
+      <div class="field">
+        <span class="field-label">Passageiros</span>
+        <div class="counter-row">
+          <div class="counter">
+            <!-- Botão − -->
+            <button class="cbtn" onclick="alterarPessoas(-1)" aria-label="Diminuir">−</button>
+            <!-- Input somente leitura — controlado pelos botões -->
+            <input class="cval" type="number" id="pessoas" value="1" min="1" max="20" readonly />
+            <!-- Botão + -->
+            <button class="cbtn" onclick="alterarPessoas(1)" aria-label="Aumentar">+</button>
+          </div>
+          <span class="counter-hint">+ R$ 40 por passageiro adicional</span>
+        </div>
+      </div>
+
+      <!-- Separador visual -->
+      <div class="separator"></div>
+
+      <!-- Botão calcular -->
+      <button class="btn-calcular" onclick="calcular()">
+        <span>Calcular Frete</span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+      </button>
+
+      <!-- ===== RESULTADO (fica oculto até calcular) ===== -->
+      <div class="resultado" id="resultado">
+        <div class="res-row">
+          <span class="res-label">Preço base</span>
+          <span class="res-val" id="rBase">—</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Passageiros adicionais</span>
+          <span class="res-val" id="rExtra">—</span>
+        </div>
+        <div class="res-divider"></div>
+        <div class="res-row">
+          <span class="res-total-label">Total estimado</span>
+          <span class="res-total-val" id="rTotal">—</span>
+        </div>
+        <p class="res-obs">* Valor estimado. Sujeito à confirmação.</p>
+      </div>
+
+      <!-- Mensagem de erro (aparece se não escolheu destino) -->
+      <div class="erro" id="erro">
+        ⚠ Por favor, selecione um destino antes de calcular.
+      </div>
+
+    </div><!-- /card -->
+
+    <!-- ===== TABELA DE PREÇOS (expansível) ===== -->
+    <div class="tabela-wrap" id="tabela-wrap">
+      <button class="tabela-toggle-btn" onclick="toggleTabela()" aria-expanded="false">
+        <span>Ver tabela completa de preços</span>
+        <span class="tab-arrow" id="tab-arrow" aria-hidden="true">▾</span>
+      </button>
+      <div class="tabela-inner" id="tabela-inner">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Destino</th>
+              <th>Preço base</th>
+              <th>2 passageiros</th>
+              <th>3 passageiros</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body">
+            <!-- Preenchido automaticamente pelo JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>Lions Transportes &mdash; Extrema, MG</p>
+    <p class="footer-formula">Fórmula: Preço Base + (Passageiros − 1) × R$ 40</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
